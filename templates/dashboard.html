@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block page_title %}Ringkasan Stok Barang{% endblock %}
+
+{% block content %}
+    <!-- Tambahkan dataset ke canvas -->
+    <div style="width: 100%; max-width: 1000px; margin: auto;">
+        <canvas id="stockChart"
+            data-names='{{ item_names | tojson | safe }}'
+            data-stocks='{{ item_stocks | tojson | safe }}'>
+        </canvas>
+    </div>
+    
+
+    <!-- Load Chart.js Offline -->
+    <script src="{{ url_for('static', filename='js/chart.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

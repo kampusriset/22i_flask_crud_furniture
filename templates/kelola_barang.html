@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Kelola Barang{% endblock %}
+
+{% block page_title %}Kelola Barang{% endblock %}
+
+{% block content %}
+        <!-- Kontainer untuk tombol dan search -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <!-- Tombol Tambah Barang -->
+        <a href="{{ url_for('add_furniture') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Tambah Barang
+        </a>
+
+        <!-- Input Search -->
+        <input type="text" id="searchInput" class="search-box" placeholder="Cari barang..." onkeyup="searchTable()">
+    </div>
+
+    <table class="table_instyle" id="barangTable">
+        <thead>
+            <tr>
+                <th>Nama</th>
+                <th>Kategori</th>  <!-- Ubah dari Deskripsi ke Kategori -->
+                <th>Bahan</th>      <!-- Tambahkan Bahan -->
+                <th>Harga</th>
+                <th>Stok</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in furniture %}
+            <tr>
+                
+                <td>{{ item.name }}</td>
+                <td>{{ item.kategori }}</td>
+                <td>{{ item.bahan.replace("[", "").replace("]", "").replace("'", "").replace('"', '') }}</td>  <!-- Format bahan agar lebih rapi -->
+                <td>Rp {{ "{:,.0f}".format(item.price) }}</td>
+                <td>{{ item.stock }}</td>
+                <td>
+                    <a href="{{ url_for('edit_furniture', id=item.id) }}" class="btn btn-warning btn-sm">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <a href="{{ url_for('delete_furniture', id=item.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus barang ini?')">
+                        <i class="fas fa-trash"></i> Hapus
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+     <!-- PAGINATION -->
+     <nav>
+        <ul class="pagination justify-content-center">
+            {% if page > 1 %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('kelola_barang', page=page-1) }}">Previous</a>
+                </li>
+            {% endif %}
+
+            {% for p in range(1, total_pages + 1) %}
+                <li class="page-item {% if p == page %}active{% endif %}">
+                    <a class="page-link" href="{{ url_for('kelola_barang', page=p) }}">{{ p }}</a>
+                </li>
+            {% endfor %}
+
+            {% if page < total_pages %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('kelola_barang', page=page+1) }}">Next</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <script src="{{ url_for('static', filename='js/search.js') }}"></script>
+{% endblock %}
